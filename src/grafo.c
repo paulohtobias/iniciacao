@@ -1,15 +1,27 @@
 #include "grafo.h"
 
-Grafo *novo_Grafo_vazio(int n){
+Aresta nova_Aresta(int saida, int chegada, double peso){
+    Aresta aresta;
+    aresta.saida = saida;
+    aresta.chegada = chegada;
+    aresta.custo = peso;
+    return aresta;
+}
+
+Grafo *novo_Grafo_vazio(int n, int m){
     Grafo *g = malloc(sizeof(Grafo));
     
     g->n = n;
     g->m = 0;
     
-    int i;
-    g->adj = malloc(n * sizeof(double *));
+    int i, j;
+    g->arestas = malloc(n * sizeof(*g->arestas));
     for(i=0; i<n; i++){
-        g->adj[i] = calloc(n, sizeof(double));
+        g->arestas[i] = malloc(m * sizeof(*g->arestas[i]));
+        
+        for(j=0; j<m; j++){
+            g->arestas[i][j] = nova_Aresta(i, -1, INF);
+        }
     }
     
     return g;
@@ -36,7 +48,7 @@ Grafo *novo_Grafo_arquivo(const char *arquivo){
            &z, &n, &ftn, &m);
     
     /* Preenchendo o grafo */
-    Grafo *g = novo_Grafo_vazio(n);
+    Grafo *g = novo_Grafo_vazio(n, m);
     
     int init, term, length, fft, power, speed, toll, type;
     double capacity, b;
@@ -54,14 +66,20 @@ Grafo *novo_Grafo_arquivo(const char *arquivo){
 
 void grafo_add_aresta_d(Grafo *g, int saida, int chegada, double peso){
     if(saida >= 0 && saida < g->n && chegada >= 0 && chegada < g->n){
-        g->adj[saida][chegada] = peso;
-        g->m++;
+        int i;
+        for(i=0; g->arestas[saida][i].chegada != -1; i++);
+        g->arestas[saida][i] = nova_Aresta(saida, chegada, peso);
     }
 }
 
 int grafo_existe_aresta_d(Grafo *g, int saida, int chegada){
     if(saida >= 0 && saida < g->n && chegada >= 0 && chegada < g->n){
-        return (g->adj[saida][chegada] != 0.0);
+        int i;
+        for(i=0; g->arestas[saida][i].chegada != -1; i++){
+            if(g->arestas[saida][i].chegada == chegada){
+                return 1;
+            }
+        }
     }
     return 0;
 }
@@ -76,7 +94,7 @@ void grafo_printa(Grafo *g){
     for(i=0; i<g->n; i++){
         printf("%2d: ", i + 1);
         for(j=0; j<g->n; j++){
-            printf("%2.0lf ", g->adj[i][j]);
+            //printf("%2.0lf ", g->arestas[i][j]);
         }
         printf("\n");
     }
@@ -86,8 +104,6 @@ int *menor_caminho(Grafo *g, int inicio){
     int i;
     int *pai = malloc(g->n * sizeof(*pai)), escolhido[g->n];
     double peso[g->n];
-    
-    double INF = 999999990.0;
     
     for(i=0; i<g->n; i++){
         escolhido[i] = 0;
@@ -113,10 +129,11 @@ int *menor_caminho(Grafo *g, int inicio){
         }
         escolhido[v] = 1;
         
-        for(w=0; w<g->n; w++){
-            if(!escolhido[w] && grafo_existe_aresta_d(g, v, w)){
-                if(peso[w] > (peso[v] + g->adj[v][w])){
-                    peso[w] = peso[v] + g->adj[v][w];
+        for(i=0; g->arestas[v][i].chegada != -1; i++){
+            w = g->arestas[v][i].chegada;
+            if(!escolhido[w]){
+                if(peso[w] > (peso[v] + g->arestas[v][i].custo)){
+                    peso[w] = peso[v] + g->arestas[v][i].custo;
                     pai[w] = v;
                 }
             }

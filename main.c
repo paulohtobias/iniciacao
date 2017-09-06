@@ -4,7 +4,7 @@
  * 
  */
 int main(int argc, char** argv) {
-    Grafo *g = novo_Grafo_arquivo("./SiouxFalls_net.txt");
+    Grafo *g = novo_Grafo_arquivo("testes/SiouxFalls/SiouxFalls_net.txt");
     
     int i;
     int **caminho = malloc(g->n * sizeof(*caminho));
@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
         caminho[i] = menor_caminho(g, i);
     }
     
-    double **f = fluxos("./SiouxFalls_trips.txt", g->n);
+    double **f = fluxos("testes/SiouxFalls/SiouxFalls_trips.txt", g->n);
     
     /* Calculando o fluxo de cada vértice */
     for(i=0; i<g->n; i++){

@@ -4,14 +4,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define INF 999999999.0
+
+typedef struct Aresta{
+    int saida;
+    int chegada;
+    double custo;
+}Aresta;
+
 typedef struct Grafo{
     int n; /** Número de vértices. */
     int m; /** Número de arestas. */
     
-    double **adj; /** Matriz de adjacência. */
+    Aresta **arestas; /** Matriz de incidência. */
 }Grafo;
 
-Grafo *novo_Grafo_vazio(int n);
+Aresta nova_Aresta(int saida, int chegada, double peso);
+
+Grafo *novo_Grafo_vazio(int n, int m);
 
 Grafo *novo_Grafo_arquivo(const char *arquivo);
 
