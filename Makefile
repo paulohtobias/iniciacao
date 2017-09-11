@@ -27,7 +27,7 @@ SOURCE = .c
 INCLUDE_PATHS = -I$(IDIR)
 
 #Libraries
-LIBRARIES = 
+LIBRARIES = -lm
 
 #Compilation line
 COMPILE = $(CC) $(CFLAGS) $(INCLUDE_PATHS)
