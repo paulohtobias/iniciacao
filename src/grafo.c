@@ -196,23 +196,25 @@ void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentag
 	int i, j, k, v, w;
 	double demanda;
 	
-	for(i=0; g->arestas[inicio][i].term != -1; i++){
-		j = g->arestas[inicio][i].term;
-		if(origemI[j] > 0){
-			demanda = origemI[j] * porcentagem;
-			
-			//Percorendo o caminho.
+	double fluxoJ;
+	Aresta *aresta = NULL;
+	
+	for(i=0; i<g->n; i++){
+		if(origemI[i] > 0.0){
+			//Percorre o caminho de i até inicio
+			//Atualizando o fluxo atual do grafo
+			demanda = origemI[i] * porcentagem;
+			w = i;
 			do{
-				w = j;
-				v = caminho[j];
+				v = caminho[w];
 				
-				for(k=0; g->arestas[v][k].term != w; k++);
+				//Encontrando a aresta {v, w}
+				for(j=0; g->arestas[v][j].term != w; j++);
 				
-				g->arestas[v][k].flow += demanda;
+				g->arestas[v][j].flow += demanda;
 				
-				j = v;
-				
-			}while(caminho[j] != -1);
+				w = v;
+			}while(v != inicio);
 		}
 	}
 	

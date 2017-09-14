@@ -29,32 +29,12 @@ int main(int argc, char** argv) {
 		
 		//Calcula e distriui o fluxo parcial.
 		for(j=0; j<g->n; j++){
-			fluxo(g, j, caminho[j], od_matriz[j], 1);
+			fluxo(g, j, caminho[j], od_matriz[j], porcentagem[i]);
 		}
-
-		double total = 0;
-		for (i = 0; i < g->n; i++) {
-			for (j = 0; j < g->m && g->arestas[i][j].term != -1; j++) {
-				total += g->arestas[i][j].flow;
-			}
-		}
-		printf("Total: %f\n", total);
 		
-		//grafo_printa(g);return 0;
-		/* Mostrando os fluxos */
-		/*printf("Fluxo parcial: %3.0f%%\n", porcentagem[i]);
-		printf("      | ");
-		for (i = 0; i < g->n; i++) {
-			printf("%6d", i + 1);
-		}
-		printf("\n");*/
-		/*for (i = 0; i < g->n; i++) {
-			printf("%6d: ", i + 1);
-			for (j = 0; j < g->arestas[i][j].term; j++) {
-				printf("%6.0lf", fluxo_total[i][j]);
-			}
-			printf("\n");
-		}*/
+		system("clear");
+		printf("Fluxo parcial: %3.0f%%\n", porcentagem[i] * 100);
+		grafo_printa(g);getchar();
 	}
 
 	return 0;
