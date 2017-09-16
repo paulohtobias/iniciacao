@@ -158,10 +158,7 @@ void bh_delete(bheap_t *h, int item){
  */
 int bh_empty(bheap_t *h)
 {
-    if (h->n == 0) {
-        return 0;
-    }
-    return 1;
+    return (h->n == 0);
 }
 
 

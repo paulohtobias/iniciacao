@@ -31,11 +31,9 @@ int main(int argc, char** argv) {
 		for(j=0; j<g->n; j++){
 			fluxo(g, j, caminho[j], od_matriz[j], porcentagem[i]);
 		}
-		
-		system("clear");
-		printf("Fluxo parcial: %3.0f%%\n", porcentagem[i] * 100);
-		grafo_printa(g);getchar();
 	}
+	
+	grafo_printa(g);
 
 	return 0;
 }

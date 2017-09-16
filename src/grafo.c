@@ -10,7 +10,7 @@ Aresta nova_Aresta(int saida, int chegada, double peso) {
 
 double calcular_tempo(Aresta aresta){
 	double stall = 1 + aresta.b * pow(aresta.flow / aresta.capacity, aresta.power);
-	return (aresta.fft * stall);
+	return aresta.fft * stall;
 }
 
 Grafo *novo_Grafo_vazio(int n, int m) {
@@ -66,6 +66,7 @@ Grafo *novo_Grafo_arquivo(const char *arquivo) {
 		--aresta.init;
 		--aresta.term;
 		aresta.flow = 0;
+		aresta.travel_time = calcular_tempo(aresta);
 		grafo_add_aresta_d(g, aresta);
 	}
 	fclose(in);
@@ -111,32 +112,25 @@ void menor_caminho(Grafo *g, int inicio, int *pai) {
 	int i;
 	int escolhido[g->n];
 	double peso[g->n];
+	bheap_t *heap = bh_alloc(g->n);
 
 	for (i = 0; i < g->n; i++) {
 		escolhido[i] = 0;
 		pai[i] = -1;
 		peso[i] = INFINITY;
+		bh_insert(heap, i, INFINITY);
 	}
 	peso[inicio] = 0;
+	bh_decrease_key(heap, inicio, 0);
 
 	int v = inicio, w;
-	while (v < g->n) {
-		//TO-DO: usar heap.
-		v = g->n;
-		for (i = 0; i < g->n; i++) {
-			if (!escolhido[i]) {
-				if (v == g->n) {
-					v = i;
-				} else if (peso[i] < peso[v]) {
-					v = i;
-				}
-			}
-		}
-		if (v == g->n) {
+	while (1) {
+		if(bh_empty(heap)){
 			break;
 		}
+		v = bh_min(heap);
 		escolhido[v] = 1;
-		
+
 		//Atualizando
 		for (i = 0; g->arestas[v][i].term != -1; i++) {
 			w = g->arestas[v][i].term;
@@ -144,11 +138,13 @@ void menor_caminho(Grafo *g, int inicio, int *pai) {
 				double travel_time = calcular_tempo(g->arestas[v][i]);
 				if (peso[w] > (peso[v] + travel_time)) {
 					peso[w] = peso[v] + travel_time;
+					bh_decrease_key(heap, w, peso[w]);
 					pai[w] = v;
 				}
 			}
 		}
 	}
+	bh_free(heap);
 }
 
 double **origem_destino(const char *arquivo, int n) {
@@ -196,9 +192,6 @@ void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentag
 	int i, j, k, v, w;
 	double demanda;
 	
-	double fluxoJ;
-	Aresta *aresta = NULL;
-	
 	for(i=0; i<g->n; i++){
 		if(origemI[i] > 0.0){
 			//Percorre o caminho de i até inicio
@@ -217,5 +210,4 @@ void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentag
 			}while(v != inicio);
 		}
 	}
-	
 }
