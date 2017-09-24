@@ -4,9 +4,9 @@ CFLAGS = -g -Wall -MMD
 
 #Binary
 ifeq ($(OS),Windows_NT)
-    BIN = main.exe
+	BIN = main.exe
 else
-    BIN = main
+	BIN = main.out
 endif
 
 #Directories
@@ -33,12 +33,8 @@ LIBRARIES = -lm
 COMPILE = $(CC) $(CFLAGS) $(INCLUDE_PATHS)
 
 #FILEs
-#---------------Include---------------#
-INCS = $(wildcard $(IDIR)/*$(HEADER)) $(wildcard $(IDIR)/*/*$(HEADER))
-
 #---------------Source----------------#
 SRCS = $(wildcard $(SDIR)/*$(SOURCE)) $(wildcard $(SDIR)/*/*$(SOURCE))
-
 #---------------Object----------------#
 OBJS = $(SRCS:$(SDIR)/%$(SOURCE)=$(ODIR)/%.o)
 #-------------Dependency--------------#
@@ -60,3 +56,6 @@ $(ODIR)/%.o: $(SDIR)/%$(SOURCE)
 .PHONY : clean
 clean :
 	-rm $(BIN) $(OBJS) $(DEPS)
+
+run:
+	./$(BIN)

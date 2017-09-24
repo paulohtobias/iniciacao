@@ -84,16 +84,10 @@ void grafo_add_aresta_d(Grafo *g, Aresta aresta) {
 	}
 }
 
-int grafo_existe_aresta_d(Grafo *g, int saida, int chegada) {
-	if (saida >= 0 && saida < g->n && chegada >= 0 && chegada < g->n) {
-		int i;
-		for (i = 0; g->arestas[saida][i].term != -1; i++) {
-			if (g->arestas[saida][i].term == chegada) {
-				return 1;
-			}
-		}
-	}
-	return 0;
+Aresta grafo_get_aresta(Grafo *g, int saida, int chegada){
+	int i;
+	for(i=0; g->arestas[saida][i].term != chegada; i++);
+	return g->arestas[saida][i];
 }
 
 void grafo_printa(Grafo *g) {
@@ -102,7 +96,8 @@ void grafo_printa(Grafo *g) {
 	for (i = 0; i < g->n; i++) {
 		printf("%2d: ", i + 1);
 		for (j = 0; j < g->m && g->arestas[i][j].term != -1; j++) {
-			printf("(%2d: %2.0lf) ", g->arestas[i][j].term + 1, g->arestas[i][j].flow);
+			double tempo = calcular_tempo(g->arestas[i][j]);
+			printf("(%2d: %f) ", g->arestas[i][j].term + 1, tempo);
 		}
 		printf("\n");
 	}
@@ -132,7 +127,7 @@ void menor_caminho(Grafo *g, int inicio, int *pai) {
 		escolhido[v] = 1;
 
 		//Atualizando
-		for (i = 0; g->arestas[v][i].term != -1; i++) {
+		for (i = 0; i < g->m && g->arestas[v][i].term != -1; i++) {
 			w = g->arestas[v][i].term;
 			if (!escolhido[w]) {
 				double travel_time = calcular_tempo(g->arestas[v][i]);
@@ -189,7 +184,7 @@ double **origem_destino(const char *arquivo, int n) {
 }
 
 void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem){
-	int i, j, k, v, w;
+	int i, j, v, w;
 	double demanda;
 	
 	for(i=0; i<g->n; i++){

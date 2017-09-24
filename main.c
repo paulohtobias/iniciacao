@@ -1,8 +1,5 @@
 #include "grafo.h"
 
-/*
- * 
- */
 int main(int argc, char** argv) {
 	int i, j;
 	
@@ -26,7 +23,7 @@ int main(int argc, char** argv) {
 		for (j = 0; j < g->n; j++) {
 			menor_caminho(g, j, caminho[j]);
 		}
-		
+
 		//Calcula e distriui o fluxo parcial.
 		for(j=0; j<g->n; j++){
 			fluxo(g, j, caminho[j], od_matriz[j], porcentagem[i]);

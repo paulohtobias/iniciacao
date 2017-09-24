@@ -41,6 +41,8 @@ Grafo *novo_Grafo_arquivo(const char *arquivo);
 
 void grafo_add_aresta_d(Grafo *g, Aresta aresta);
 
+Aresta grafo_get_aresta(Grafo *g, int saida, int chegada);
+
 void grafo_printa(Grafo *g);
 
 void menor_caminho(Grafo* g, int inicio, int *pai);
