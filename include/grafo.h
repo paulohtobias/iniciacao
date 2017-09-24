@@ -6,9 +6,6 @@
 #include <math.h>
 #include "bheap.h"
 
-//int init, term, length, fft, power, speed, toll, type;
-	//double capacity, b;
-
 typedef struct Aresta {
     int init;
     int term;
@@ -21,14 +18,14 @@ typedef struct Aresta {
     int speed;
     int toll;
     int type;
-    double travel_time;
+    double travel_time; ///Não usado ainda.
 } Aresta;
 
 typedef struct Grafo {
-    int n; /** Número de vértices. */
-    int m; /** Número de arestas. */
+    int n; ///Número de vértices.
+    int m; ///Número de arestas.
 
-    Aresta **arestas; /** Matriz de incidência. */
+    Aresta **arestas; ///Matriz de incidência.
 } Grafo;
 
 Aresta nova_Aresta(int saida, int chegada, double peso);
@@ -46,9 +43,5 @@ Aresta grafo_get_aresta(Grafo *g, int saida, int chegada);
 void grafo_printa(Grafo *g);
 
 void menor_caminho(Grafo* g, int inicio, int *pai);
-
-double **origem_destino(const char *arquivo, int n);
-
-void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem);
 
 #endif /* GRAFO_H */
