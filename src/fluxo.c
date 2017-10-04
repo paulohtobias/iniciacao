@@ -99,7 +99,7 @@ void incremental(Grafo *g, double **matriz_od){
 }
 
 void medias_sucessivas(Grafo *g, double **matriz_od){
-	int i, j, k, n = 10;
+	int i, j, k, n = 100;
 	
 	int caminho[g->n][g->n];
 
