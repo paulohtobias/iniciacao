@@ -1,11 +1,18 @@
 #include "fluxo.h"
 
+int i, j;
 int main(int argc, char** argv) {
+	if(argc < 3){
+		printf("Falta os nomes dos testes.\n");
+		return 1;
+	}
 	//Grafo inicial tem o free flow time como peso das arestas.
-	Grafo *g = novo_Grafo_arquivo("testes/SiouxFalls/SiouxFalls_net.txt");
+	Grafo *g = novo_Grafo_arquivo(argv[1]);
+	
+	grafo_printa(g); //return 0;
 
 	//Inicializçao da matriz OD.
-	double **matriz_od = origem_destino("testes/SiouxFalls/SiouxFalls_trips.txt", g->n);
+	double **matriz_od = origem_destino(argv[2], g->n, &g->total_flow);
 
 	//Menu
 	int op;
@@ -36,7 +43,6 @@ int main(int argc, char** argv) {
 	int menor_i = 0, menor_j = 0;
 	double tempo;
 	double tmedio = 0;
-	int veiculos = 360600;
 	int estouro = 0;
 	
 	int i, j;
@@ -65,7 +71,7 @@ int main(int argc, char** argv) {
 	
 	printf("Maior tempo {%d, %d}: %f\n", maior_i + 1, g->arestas[maior_i][maior_j].term + 1, calcular_tempo(g->arestas[maior_i][maior_j]));
 	printf("Menor tempo {%d, %d}: %f\n", menor_i + 1, g->arestas[menor_i][menor_j].term + 1, calcular_tempo(g->arestas[menor_i][menor_j]));
-	printf("Tempo medio: %f\n", tmedio / veiculos);
+	printf("Tempo medio: %f\n", tmedio / g->total_flow);
 	printf("Estouro: %d/%d\n", estouro, g->m);
 
 	return 0;
