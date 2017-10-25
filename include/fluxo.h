@@ -3,7 +3,7 @@
 
 #include "grafo.h"
 
-double **origem_destino(const char *arquivo, int n);
+double **origem_destino(const char *arquivo, int n, double *total_flow);
 
 void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem);
 

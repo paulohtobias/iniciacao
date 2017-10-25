@@ -9,6 +9,8 @@ Aresta nova_Aresta(int saida, int chegada, double peso) {
 }
 
 double calcular_tempo(Aresta aresta){
+	//return aresta.fft + 0.02 * aresta.flow;
+	
 	double stall = 1 + aresta.b * pow(aresta.flow / aresta.capacity, aresta.power);
 	return aresta.fft * stall;
 }
@@ -18,6 +20,7 @@ Grafo *novo_Grafo_vazio(int n, int m) {
 
 	g->n = n;
 	g->m = m;
+	g->total_flow = 0;
 
 	int i, j;
 	g->arestas = malloc(n * sizeof (*g->arestas));
@@ -94,10 +97,10 @@ void grafo_printa(Grafo *g) {
 	int i, j;
 	
 	for (i = 0; i < g->n; i++) {
-		printf("%2d: ", i + 1);
+		printf("%2d: ", i );
 		for (j = 0; j < g->m && g->arestas[i][j].term != -1; j++) {
 			double tempo = calcular_tempo(g->arestas[i][j]);
-			printf("(%2d: %f) ", g->arestas[i][j].term + 1, tempo);
+			printf("(%2d: %f) ", g->arestas[i][j].term , g->arestas[i][j].flow);
 		}
 		printf("\n");
 	}

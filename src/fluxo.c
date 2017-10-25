@@ -1,6 +1,6 @@
 #include "fluxo.h"
 
-double **origem_destino(const char *arquivo, int n) {
+double **origem_destino(const char *arquivo, int n, double *total_flow) {
 	/* Abrindo o arquivo */
 	FILE *in = fopen(arquivo, "r");
 	if (in == NULL) {
@@ -10,13 +10,12 @@ double **origem_destino(const char *arquivo, int n) {
 
 	/* Lendo metadata */
 	int z;
-	double tf;
 	fscanf(in, "<NUMBER OF ZONES> %d\n"
 		"<TOTAL OD FLOW> %lf\n"
 		"<END OF METADATA>\n"
 		"\n"
 		"\n",
-		&z, &tf);
+		&z, total_flow);
 
 	/* Preenchendo a matriz */
 	double **fluxos = malloc(n * sizeof (*fluxos));
@@ -52,6 +51,9 @@ void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentag
 			
 			//Percorre o caminho de i até inicio
 			w = i;
+			if(caminho[w] == -1){
+				continue;
+			}
 			do{
 				v = caminho[w];
 				
