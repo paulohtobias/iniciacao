@@ -1,6 +1,6 @@
 #include "fluxo.h"
 
-int i, j;
+int i, i;
 int main(int argc, char** argv) {
 	if(argc < 3){
 		printf("Falta os nomes dos testes.\n");

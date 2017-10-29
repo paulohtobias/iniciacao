@@ -68,6 +68,48 @@ void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentag
 	}
 }
 
+double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double *demanda){
+	int i, v, w;
+	
+	double fluxo_maximo;
+
+	//Encontrando o gargalo.
+	fluxo_maximo = *demanda;
+	//Percorre o caminho de i até inicio
+	w = destino;
+	do{
+		v = caminho[w];
+
+		//Encontrando a aresta {v, w}
+		for(i=0; g->arestas[v][i].term != w; i++);
+
+		double capacidade_restante = g->arestas[v][i].capacity - g->arestas[v][i].flow;
+		if(capacidade_restante < fluxo_maximo){
+			fluxo_maximo = capacidade_restante;
+		}
+
+		w = v;
+	}while(v != origem);
+
+	//Alocando o fluxo.
+	w = destino;
+	do{
+		v = caminho[w];
+
+		//Encontrando a aresta {v, w}
+		for(i=0; g->arestas[v][i].term != w; i++);
+
+		g->arestas[v][i].flow += fluxo_maximo;
+
+		w = v;
+	}while(v != origem);
+	
+	//Atualiza a demanda.
+	(*demanda) -= fluxo_maximo;
+	
+	return fluxo_maximo;
+}
+
 void all_or_nothing(Grafo *g, double **matriz_od){
 	int i;
 	
