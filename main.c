@@ -3,7 +3,9 @@
 int i, j;
 int main(int argc, char** argv) {
 	if(argc < 3){
-		printf("Falta os nomes dos testes.\n");
+		printf("Falta os nomes dos arquivos de testes.\n");
+		printf("./main.out testes/SiouxFalls/SiouxFalls_net.txt testes/SiouxFalls/SiouxFalls_trips.txt\n"
+			   "./main.out testes/RedeArtigo/redeArtigo.txt testes/RedeArtigo/tripsArtigo.txt\n");
 		return 1;
 	}
 	//Grafo inicial tem o free flow time como peso das arestas.
@@ -18,7 +20,8 @@ int main(int argc, char** argv) {
 	int op;
 	printf("1 - All or Nothing\n"
 		   "2 - Incremental\n"
-		   "3 - Medias Sucessivas\n");
+		   "3 - Medias Sucessivas\n"
+		   "4 - Solucao\n");
 	
 	scanf("%d", &op);
 	
@@ -31,6 +34,9 @@ int main(int argc, char** argv) {
 			break;
 		case 3:
 			medias_sucessivas(g, matriz_od);
+			break;
+		case 4:
+			solucao_teste(g, matriz_od);
 			break;
 		default:
 			printf("Opção inválida\n");

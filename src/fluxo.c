@@ -77,32 +77,37 @@ double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double 
 	fluxo_maximo = *demanda;
 	//Percorre o caminho de i até inicio
 	w = destino;
-	do{
-		v = caminho[w];
+	if(caminho[w] == -1){
+		printf("Nao existe caminho de %d ate %d\n", origem, destino);
+		getchar();
+	}else{
+		do{
+			v = caminho[w];
 
-		//Encontrando a aresta {v, w}
-		for(i=0; g->arestas[v][i].term != w; i++);
+			//Encontrando a aresta {v, w}
+			for(i=0; g->arestas[v][i].term != w; i++);
 
-		double capacidade_restante = g->arestas[v][i].capacity - g->arestas[v][i].flow;
-		if(capacidade_restante < fluxo_maximo){
-			fluxo_maximo = capacidade_restante;
-		}
+			double capacidade_restante = g->arestas[v][i].capacity - g->arestas[v][i].flow;
+			if(capacidade_restante < fluxo_maximo){
+				fluxo_maximo = capacidade_restante;
+			}
 
-		w = v;
-	}while(v != origem);
+			w = v;
+		}while(v != origem);
 
-	//Alocando o fluxo.
-	w = destino;
-	do{
-		v = caminho[w];
+		//Alocando o fluxo.
+		w = destino;
+		do{
+			v = caminho[w];
 
-		//Encontrando a aresta {v, w}
-		for(i=0; g->arestas[v][i].term != w; i++);
+			//Encontrando a aresta {v, w}
+			for(i=0; g->arestas[v][i].term != w; i++);
 
-		g->arestas[v][i].flow += fluxo_maximo;
+			g->arestas[v][i].flow += fluxo_maximo;
 
-		w = v;
-	}while(v != origem);
+			w = v;
+		}while(v != origem);
+	}
 	
 	//Atualiza a demanda.
 	(*demanda) -= fluxo_maximo;
