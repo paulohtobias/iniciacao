@@ -10,9 +10,6 @@ Aresta nova_Aresta(int saida, int chegada, double peso) {
 
 double calcular_tempo(Aresta aresta){
 	//return aresta.fft + 0.02 * aresta.flow;
-	if(aresta.flow == aresta.capacity){
-		return INFINITY - 1.0;
-	}
 	
 	double stall = 1 + aresta.b * pow(aresta.flow / aresta.capacity, aresta.power);
 	return aresta.fft * stall;

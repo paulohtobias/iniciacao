@@ -87,7 +87,7 @@ double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double 
 			//Encontrando a aresta {v, w}
 			for(i=0; g->arestas[v][i].term != w; i++);
 
-			double capacidade_restante = g->arestas[v][i].capacity - g->arestas[v][i].flow;
+			double capacidade_restante = g->arestas[v][i].capacity;// - g->arestas[v][i].flow;
 			if(capacidade_restante < fluxo_maximo){
 				fluxo_maximo = capacidade_restante;
 			}
