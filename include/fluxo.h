@@ -9,6 +9,8 @@ void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentag
 
 double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double *demanda);
 
+void calcular_fo(Grafo *g, double *tmedio, int *arestas_estouradas);
+
 void all_or_nothing(Grafo *g, double **matriz_od);
 
 void incremental(Grafo *g, double **matriz_od);

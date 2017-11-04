@@ -115,6 +115,29 @@ double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double 
 	return fluxo_maximo;
 }
 
+void calcular_fo(Grafo *g, double *tmedio, int *arestas_estouradas){
+	double tempo;
+	
+	int i, j;
+	for(i=0; i<g->n; i++){
+		for(j=0; g->arestas[i][j].term != -1; j++){
+			
+			printf("Aresta {%d, %d} %f/%f: %.2f%%\n", i + 1, g->arestas[i][j].term + 1, g->arestas[i][j].flow, g->arestas[i][j].capacity, 100 * g->arestas[i][j].flow / g->arestas[i][j].capacity);
+			
+			//Calculando o tempo.
+			if(tmedio != NULL){
+				tempo = calcular_tempo(g->arestas[i][j]);
+				(*tmedio) += (tempo * g->arestas[i][j].flow);
+			}
+			
+			//Calculando o número de arestas que estouraram a capcidade máxima.
+			if(arestas_estouradas != NULL && g->arestas[i][j].flow > g->arestas[i][j].capacity){
+				(*arestas_estouradas)++;
+			}
+		}
+	}
+}
+
 void all_or_nothing(Grafo *g, double **matriz_od){
 	int i;
 	

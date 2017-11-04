@@ -1,4 +1,5 @@
 #include "solucao.h"
+#include "busca.h"
 
 Caminho *novo_Caminho_vazio(int n){
 	Caminho *caminho = malloc(sizeof(Caminho));
@@ -56,10 +57,12 @@ void solucao_constroi_inicial(Solucao *solucao, Grafo *g){
 	}
 }
 
-int comparar_solucao(Solucao *s1, Solucao *s2){
-	if(s1->fluxo_total < s2->fluxo_total){
+int comparar_solucao(const void *s1, const void *s2){
+	const Solucao *solucao1 = s1;
+	const Solucao *solucao2 = s2;
+	if(solucao1->fluxo_total < solucao2->fluxo_total){
 		return 1;
-	}else if(s1->fluxo_total > s2->fluxo_total){
+	}else if(solucao1->fluxo_total > solucao2->fluxo_total){
 		return -1;
 	}else{
 		return 0;
@@ -70,4 +73,8 @@ void solucao_teste(Grafo *g, double **matriz_od){
 	Solucao *solucao = nova_Solucao_vazia(g->n, matriz_od);
 	
 	solucao_constroi_inicial(solucao, g);
+	
+	srand((unsigned)time(NULL));
+	
+	busca_local_vizinho(g, solucao, 0);
 }
