@@ -3,6 +3,8 @@
 
 #include "solucao.h"
 
-void busca_local_vizinho(Grafo *g, Solucao *solucao, int indice);
+ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int indice_caminho);
+
+void busca_local(Grafo *g, Solucao *solcao);
 
 #endif /* BUSCA_H */

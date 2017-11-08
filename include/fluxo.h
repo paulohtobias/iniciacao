@@ -5,7 +5,9 @@
 
 double **origem_destino(const char *arquivo, int n, double *total_flow);
 
-void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem);
+void fluxo(Grafo *g, int origem, int destino, int *pai, double demanda);
+
+void fluxo_origem(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem);
 
 double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double *demanda);
 

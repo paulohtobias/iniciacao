@@ -76,5 +76,5 @@ void solucao_teste(Grafo *g, double **matriz_od){
 	
 	srand((unsigned)time(NULL));
 	
-	busca_local_vizinho(g, solucao, 0);
+	busca_local(g, solucao);
 }

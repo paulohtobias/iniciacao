@@ -40,8 +40,24 @@ double **origem_destino(const char *arquivo, int n, double *total_flow) {
 	return fluxos;
 }
 
-void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem){
-	int i, j, v, w;
+void fluxo(Grafo *g, int origem, int destino, int *pai, double demanda){
+	int i, v, w;
+	
+	w = destino;
+	do{
+		v = pai[w];
+
+		//Encontrando a aresta {v, w}
+		for(i=0; g->arestas[v][i].term != w; i++);
+
+		g->arestas[v][i].flow += demanda;
+
+		w = v;
+	}while(v != origem);
+}
+
+void fluxo_origem(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem){
+	int i;
 	double demanda;
 	
 	for(i=0; i<g->n; i++){
@@ -49,21 +65,8 @@ void fluxo(Grafo *g, int inicio, int *caminho, double *origemI, double porcentag
 			//Atualizando o fluxo atual do grafo
 			demanda = origemI[i] * porcentagem;
 			
-			//Percorre o caminho de i até inicio
-			w = i;
-			if(caminho[w] == -1){
-				continue;
-			}
-			do{
-				v = caminho[w];
-				
-				//Encontrando a aresta {v, w}
-				for(j=0; g->arestas[v][j].term != w; j++);
-				
-				g->arestas[v][j].flow += demanda;
-				
-				w = v;
-			}while(v != inicio);
+			//Aloca o fluxo.
+			fluxo(g, inicio, i, caminho, demanda);
 		}
 	}
 }
@@ -96,17 +99,7 @@ double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double 
 		}while(v != origem);
 
 		//Alocando o fluxo.
-		w = destino;
-		do{
-			v = caminho[w];
-
-			//Encontrando a aresta {v, w}
-			for(i=0; g->arestas[v][i].term != w; i++);
-
-			g->arestas[v][i].flow += fluxo_maximo;
-
-			w = v;
-		}while(v != origem);
+		fluxo(g, origem, destino, caminho, *demanda);
 	}
 	
 	//Atualiza a demanda.
@@ -122,7 +115,7 @@ void calcular_fo(Grafo *g, double *tmedio, int *arestas_estouradas){
 	for(i=0; i<g->n; i++){
 		for(j=0; g->arestas[i][j].term != -1; j++){
 			
-			printf("Aresta {%d, %d} %f/%f: %.2f%%\n", i + 1, g->arestas[i][j].term + 1, g->arestas[i][j].flow, g->arestas[i][j].capacity, 100 * g->arestas[i][j].flow / g->arestas[i][j].capacity);
+			//printf("Aresta {%d, %d} %f/%f: %.2f%%\n", i + 1, g->arestas[i][j].term + 1, g->arestas[i][j].flow, g->arestas[i][j].capacity, 100 * g->arestas[i][j].flow / g->arestas[i][j].capacity);
 			
 			//Calculando o tempo.
 			if(tmedio != NULL){
@@ -148,7 +141,7 @@ void all_or_nothing(Grafo *g, double **matriz_od){
 	}
 	
 	for(i=0; i<g->n; i++){
-		fluxo(g, i, caminho[i], matriz_od[i], 1);
+		fluxo_origem(g, i, caminho[i], matriz_od[i], 1);
 	}
 }
 
@@ -165,7 +158,7 @@ void incremental(Grafo *g, double **matriz_od){
 		}
 
 		for(j=0; j<g->n; j++){
-			fluxo(g, j, caminho[j], matriz_od[j], porcentagem[i]);
+			fluxo_origem(g, j, caminho[j], matriz_od[j], porcentagem[i]);
 		}
 	}
 }
@@ -190,7 +183,7 @@ void medias_sucessivas(Grafo *g, double **matriz_od){
 
 		//Calcula e distriui o fluxo parcial.
 		for(j=0; j<g->n; j++){
-			fluxo(g, j, caminho[j], matriz_od[j], (double)1 / (i+1));
+			fluxo_origem(g, j, caminho[j], matriz_od[j], (double)1 / (i+1));
 		}
 	}
 }

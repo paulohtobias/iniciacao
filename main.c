@@ -3,7 +3,7 @@
 int i, j;
 int main(int argc, char** argv) {
 	if(argc < 3){
-		printf("Falta os nomes dos arquivos de testes.\n");
+		printf("Faltam os nomes dos arquivos de testes.\n");
 		printf("./main.out testes/SiouxFalls/SiouxFalls_net.txt testes/SiouxFalls/SiouxFalls_trips.txt\n"
 			   "./main.out testes/RedeArtigo/redeArtigo.txt testes/RedeArtigo/tripsArtigo.txt\n");
 		return 1;
