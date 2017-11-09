@@ -35,6 +35,7 @@ void busca_local(Grafo *g, Solucao *solucao){
 	calcular_fo(g, &fo, NULL);
 	
 	do{
+		
 		//Sorteando um par OD aleatoriamente.
 		Solucao *ssss;
 		do{
@@ -51,8 +52,12 @@ void busca_local(Grafo *g, Solucao *solucao){
 		
 		calcular_fo(g, &fo_novo, NULL);
 		
-		if(fo_novo > fo){
-			melhora = 1;
+		printf("Antigo: %f\n", fo);
+		printf("Novo tempo: %f\n", fo_novo);
+		
+		if(fo_novo < fo){
+			printf("Melhorou\n");
+			melhora = 0;
 			
 			fo = fo_novo;
 			arraylist_remove_index(solucao[indice_od].caminhos, indice_caminho);
@@ -62,7 +67,7 @@ void busca_local(Grafo *g, Solucao *solucao){
 				arraylist_insert_last(solucao[indice_od].caminhos, arraylist_remove_last(vizinhos));
 			}
 		}else{
-			melhora = 0;
+			melhora++;
 			
 			//Desfaz as alterações.
 			while(!arraylist_is_empty(vizinhos)){
@@ -76,5 +81,5 @@ void busca_local(Grafo *g, Solucao *solucao){
 			fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, temp->pai, temp->fluxo);
 		}
 		
-	}while(melhora);
+	}while(melhora < 10);
 }

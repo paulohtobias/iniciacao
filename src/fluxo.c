@@ -18,6 +18,7 @@ double **origem_destino(const char *arquivo, int n, double *total_flow) {
 		&z, total_flow);
 
 	/* Preenchendo a matriz */
+	//(*total_flow) *= 0.1;
 	double **fluxos = malloc(n * sizeof (*fluxos));
 	int i, j, dump;
 	for (i = 0; i < n; i++) {
@@ -26,6 +27,7 @@ double **origem_destino(const char *arquivo, int n, double *total_flow) {
 		for (j = 0; j < n; j++) {
 			fscanf(in, "%d :", &dump);
 			fscanf(in, "%lf; ", &fluxos[i][j]);
+			//fluxos[i][j]*=0.1;
 			if (j % 4 == 0) {
 				fscanf(in, "\n");
 			}
