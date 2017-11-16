@@ -34,6 +34,8 @@ Aresta nova_Aresta(int saida, int chegada, double peso);
 
 double calcular_tempo(Aresta aresta);
 
+double calcular_tempo_caminho(Grafo *g, int *pai, int origem, int destino);
+
 Grafo *novo_Grafo_vazio(int n, int m);
 
 Grafo *novo_Grafo_arquivo(const char *arquivo);

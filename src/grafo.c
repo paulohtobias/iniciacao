@@ -15,6 +15,25 @@ double calcular_tempo(Aresta aresta){
 	return aresta.fft * stall;
 }
 
+double calcular_tempo_caminho(Grafo *g, int *pai, int origem, int destino){
+	double total = 0.0;
+	
+	int w = destino;
+	int v = pai[w];
+	while(v != -1){
+		
+		//Encontrando a aresta {v,w}.
+		Aresta aresta_vw = grafo_get_aresta(g, v, w);
+		
+		total += calcular_tempo(aresta_vw);
+		
+		w = v;
+		v = pai[w];
+	}
+	
+	return total;
+}
+
 Grafo *novo_Grafo_vazio(int n, int m) {
 	Grafo *g = malloc(sizeof (Grafo));
 
