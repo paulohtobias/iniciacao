@@ -71,10 +71,10 @@ int comparar_solucao(const void *s1, const void *s2){
 
 void solucao_teste(Grafo *g, double **matriz_od){
 	int melhor_caminho[g->n][g->n];
-	double melhor_peso[g->n][g->n];
+	double melhor_custo[g->n][g->n];
 
 	int i, j;
-	for(i = 0; i < g->n; i++){
+	/*for(i = 0; i < g->n; i++){
 		menor_caminho(g, i, melhor_caminho[i]);
 		for(j = 0; j < g->n; j++){
 			if(matriz_od[i][j] > 0){
@@ -86,7 +86,7 @@ void solucao_teste(Grafo *g, double **matriz_od){
 				melhor_peso[i][j] = 0;
 			}
 		}
-	}
+	}*/
 
 	Solucao *solucao = nova_Solucao_vazia(g->n, matriz_od);
 
@@ -95,53 +95,49 @@ void solucao_teste(Grafo *g, double **matriz_od){
 	srand((unsigned) time(NULL));
 
 	busca_local(g, solucao);
+	
+	//Achando o melhor caminho.
+	for(i=0; i<g->n; i++){
+		menor_caminho(g, i, melhor_caminho[i]);
+		for(j=0; j<g->n; j++){
+			if(matriz_od[i][j] > 0){
+				melhor_custo[i][j] = calcular_tempo_caminho(g, melhor_caminho[i], i, j);
+			}else{
+				melhor_custo[i][j] = INFINITY;
+			}
+		}
+	}
 
-	double fora = 0;
-	int v, w, a, b;
+	double fora = 0, aec = 0;
 	int o, d;
 	for(i = 0; i < g->n * g->n; i++){ //Para cada par OD
 		o = solucao[i].origem;
 		d = solucao[i].destino;
 		if(solucao[i].caminhos != NULL){
-
+			
 			for(j = 0; j < solucao[i].caminhos->length; j++){ //Para cada caminho j
 
 				Caminho *cj = arraylist_get_index(solucao[i].caminhos, j);
 
 				/*
-				 * Olhando se o caminho de d até o do caminho j é igual ao
-				 * melhor caminho entre o e d.
-				 */
-				w = d;
-				v = cj->pai[w];
-				
-				b = d;
-				a = melhor_caminho[o][b];
-				
-				while(v != -1 && v == a && w == b){
-					w = v;
-					v = cj->pai[w];
-					
-					b = a;
-					a = melhor_caminho[o][b];
-				}
-
-				//Se v == -1, então o caminho j é igual ao melhor caminho.
-				if(v != -1){
-					fora += cj->fluxo;
-				}
-
-
-				/*
-				 * Se o tempo do caminho j for maior que o melho tempo do
+				 * Se o tempo do caminho j for maior que o melhor tempo do
 				 * caminho OD, então todos os carros deste caminho estão fora do
 				 * caminho ideal.
 				 */
-				/*if(calcular_tempo_caminho(g, cj->pai, o, d) != melhor_peso[o][d]){
+				double cuusto_r = calcular_tempo_caminho(g, cj->pai, o, d);
+				/*printf("Melhor tempo entre %d - %d: %f\n", o, d, melhor_peso[o][d]);
+				printf("Tempo calculado: %f # Fluxo: %.0f\n", tempo, cj->fluxo);
+				getchar();*/
+				
+				aec += (cj->fluxo * (cuusto_r - melhor_custo[o][d]));
+				
+				if(cuusto_r != melhor_custo[o][d]){
 					fora += cj->fluxo;
-				}*/
+				}
 			}
 		}
 	}
-	printf("%f carros ficaram fora do seu caminho ideal\n", fora);
+	aec /= g->total_flow;
+	printf("%.0f/%.0f (%.2f%%) carros ficaram fora do seu caminho ideal\n", fora, g->total_flow, fora / g->total_flow * 100);
+	printf("AEC: %f\n\n", aec);
 }

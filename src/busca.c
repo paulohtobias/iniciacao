@@ -53,10 +53,10 @@ void busca_local(Grafo *g, Solucao *solucao){
 		calcular_fo(g, &fo_novo, NULL);
 		
 		printf("Antigo: %f\n", fo);
-		printf("Novo tempo: %f\n", fo_novo);
+		printf(" Novo : %f\n\n", fo_novo);
 		
 		if(fo_novo < fo){
-			printf("Melhorou\n");
+			printf("Melhorou\n\n");
 			melhora = 0;
 			
 			fo = fo_novo;
