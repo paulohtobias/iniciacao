@@ -8,7 +8,7 @@ ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int in
 	//Retirando o fluxo do grafo.
 	fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, caminho->pai, -caminho->fluxo);
 	
-	double fluxo_restante = caminho->fluxo;
+	int fluxo_restante = caminho->fluxo;
 
 	while(fluxo_restante > 0.0){
 		Caminho *novo_caminho = novo_Caminho_vazio(g->n);
@@ -52,8 +52,8 @@ void busca_local(Grafo *g, Solucao *solucao){
 		
 		calcular_fo(g, &fo_novo, NULL);
 		
-		printf("Antigo: %f\n", fo);
-		printf(" Novo : %f\n\n", fo_novo);
+		printf("Antigo: %17f\n", fo);
+		printf(" Novo : %17f\n\n", fo_novo);
 		
 		if(fo_novo < fo){
 			printf("Melhorou\n\n");

@@ -9,7 +9,7 @@
 typedef struct Aresta {
     int init;
     int term;
-    double flow;
+    int flow;
     double capacity;
     int length;
     int fft;
@@ -25,7 +25,7 @@ typedef struct Grafo {
     int n; ///Número de vértices.
     int m; ///Número de arestas.
 	
-	double total_flow; ///Número total de veículos.
+	int total_flow; ///Número total de veículos.
 
     Aresta **arestas; ///Matriz de incidência.
 } Grafo;

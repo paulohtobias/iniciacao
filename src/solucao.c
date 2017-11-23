@@ -4,13 +4,13 @@
 Caminho *novo_Caminho_vazio(int n){
 	Caminho *caminho = malloc(sizeof(Caminho));
 
-	caminho->fluxo = 0.0;
+	caminho->fluxo = 0;
 	caminho->pai = malloc(n * sizeof(int));
 
 	return caminho;
 }
 
-Solucao *nova_Solucao_vazia(int n, double **matriz_od){
+Solucao *nova_Solucao_vazia(int n, int **matriz_od){
 	int n2 = n*n;
 	Solucao *solucao = malloc(n2 * sizeof(Solucao));
 
@@ -41,7 +41,7 @@ void solucao_constroi_inicial(Solucao *solucao, Grafo *g){
 	qsort(solucao, n * n, sizeof(Solucao), comparar_solucao);
 
 	for(i = 0; i < n * n; i++){
-		double fluxo_restante = solucao[i].fluxo_total;
+		int fluxo_restante = solucao[i].fluxo_total;
 		while(fluxo_restante > 0.0){
 			Caminho *caminho = novo_Caminho_vazio(n);
 			menor_caminho(g, solucao[i].origem, caminho->pai);
@@ -69,7 +69,7 @@ int comparar_solucao(const void *s1, const void *s2){
 	}
 }
 
-void solucao_teste(Grafo *g, double **matriz_od){
+void solucao_teste(Grafo *g, int **matriz_od){
 	int melhor_caminho[g->n][g->n];
 	double melhor_custo[g->n][g->n];
 
@@ -108,7 +108,8 @@ void solucao_teste(Grafo *g, double **matriz_od){
 		}
 	}
 
-	double fora = 0, aec = 0;
+	int fora = 0;
+	double aec = 0;
 	int o, d;
 	for(i = 0; i < g->n * g->n; i++){ //Para cada par OD
 		o = solucao[i].origem;
@@ -124,20 +125,20 @@ void solucao_teste(Grafo *g, double **matriz_od){
 				 * caminho OD, então todos os carros deste caminho estão fora do
 				 * caminho ideal.
 				 */
-				double cuusto_r = calcular_tempo_caminho(g, cj->pai, o, d);
+				double custo_r = calcular_tempo_caminho(g, cj->pai, o, d);
 				/*printf("Melhor tempo entre %d - %d: %f\n", o, d, melhor_peso[o][d]);
 				printf("Tempo calculado: %f # Fluxo: %.0f\n", tempo, cj->fluxo);
 				getchar();*/
 				
-				aec += (cj->fluxo * (cuusto_r - melhor_custo[o][d]));
+				aec += (cj->fluxo * (custo_r - melhor_custo[o][d]));
 				
-				if(cuusto_r != melhor_custo[o][d]){
+				if(custo_r != melhor_custo[o][d]){
 					fora += cj->fluxo;
 				}
 			}
 		}
 	}
 	aec /= g->total_flow;
-	printf("%.0f/%.0f (%.2f%%) carros ficaram fora do seu caminho ideal\n", fora, g->total_flow, fora / g->total_flow * 100);
+	printf("%d/%d (%.2f%%) carros ficaram fora do seu caminho ideal\n", fora, g->total_flow, (double)fora / g->total_flow * 100);
 	printf("AEC: %f\n\n", aec);
 }

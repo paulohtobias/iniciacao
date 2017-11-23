@@ -1,6 +1,6 @@
 #include "fluxo.h"
 
-double **origem_destino(const char *arquivo, int n, double *total_flow) {
+int **origem_destino(const char *arquivo, int n, int *total_flow) {
 	/* Abrindo o arquivo */
 	FILE *in = fopen(arquivo, "r");
 	if (in == NULL) {
@@ -10,23 +10,27 @@ double **origem_destino(const char *arquivo, int n, double *total_flow) {
 
 	/* Lendo metadata */
 	int z;
+	double dtotal_flow;
 	fscanf(in, "<NUMBER OF ZONES> %d\n"
 		"<TOTAL OD FLOW> %lf\n"
 		"<END OF METADATA>\n"
 		"\n"
 		"\n",
-		&z, total_flow);
+		&z, &dtotal_flow);
 
+	(*total_flow) = dtotal_flow;
 	/* Preenchendo a matriz */
 	//(*total_flow) *= 0.1;
-	double **fluxos = malloc(n * sizeof (*fluxos));
+	int **fluxos = malloc(n * sizeof (*fluxos));
 	int i, j, dump;
+	double dfluxo;
 	for (i = 0; i < n; i++) {
 		fluxos[i] = malloc(n * sizeof (*(fluxos[i])));
 		fscanf(in, "Origin \t%d \n", &dump);
 		for (j = 0; j < n; j++) {
 			fscanf(in, "%d :", &dump);
-			fscanf(in, "%lf; ", &fluxos[i][j]);
+			fscanf(in, "%lf; ", &dfluxo);
+			fluxos[i][j] = dfluxo;
 			//fluxos[i][j]*=0.1;
 			if (j % 4 == 0) {
 				fscanf(in, "\n");
@@ -42,7 +46,7 @@ double **origem_destino(const char *arquivo, int n, double *total_flow) {
 	return fluxos;
 }
 
-void fluxo(Grafo *g, int origem, int destino, int *pai, double demanda){
+void fluxo(Grafo *g, int origem, int destino, int *pai, int demanda){
 	int i, v, w;
 	
 	w = destino;
@@ -58,14 +62,14 @@ void fluxo(Grafo *g, int origem, int destino, int *pai, double demanda){
 	}while(v != origem);
 }
 
-void fluxo_origem(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem){
+void fluxo_origem(Grafo *g, int inicio, int *caminho, int *origemI, double porcentagem){
 	int i;
-	double demanda;
+	int demanda;
 	
 	for(i=0; i<g->n; i++){
-		if(origemI[i] > 0.0){
+		if(origemI[i] > 0){
 			//Atualizando o fluxo atual do grafo
-			demanda = origemI[i] * porcentagem;
+			demanda = (int)(origemI[i] * porcentagem);
 			
 			//Aloca o fluxo.
 			fluxo(g, inicio, i, caminho, demanda);
@@ -73,10 +77,10 @@ void fluxo_origem(Grafo *g, int inicio, int *caminho, double *origemI, double po
 	}
 }
 
-double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double *demanda){
+int fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, int *demanda){
 	int i, v, w;
 	
-	double fluxo_maximo;
+	int fluxo_maximo;
 
 	//Encontrando o gargalo.
 	fluxo_maximo = *demanda;
@@ -131,9 +135,10 @@ void calcular_fo(Grafo *g, double *tmedio, int *arestas_estouradas){
 			}
 		}
 	}
+	//TO-DO: (*tmedio) /= g->total_flow;
 }
 
-void all_or_nothing(Grafo *g, double **matriz_od){
+void all_or_nothing(Grafo *g, int **matriz_od){
 	int i;
 	
 	int caminho[g->n][g->n];
@@ -147,7 +152,7 @@ void all_or_nothing(Grafo *g, double **matriz_od){
 	}
 }
 
-void incremental(Grafo *g, double **matriz_od){
+void incremental(Grafo *g, int **matriz_od){
 	int i, j;
 
 	int caminho[g->n][g->n];
@@ -165,7 +170,7 @@ void incremental(Grafo *g, double **matriz_od){
 	}
 }
 
-void medias_sucessivas(Grafo *g, double **matriz_od){
+void medias_sucessivas(Grafo *g, int **matriz_od){
 	int i, j, k, n = 100;
 	
 	int caminho[g->n][g->n];
@@ -174,7 +179,7 @@ void medias_sucessivas(Grafo *g, double **matriz_od){
 		//Retirando 1/n do fluxo
 		for(j=0; j<g->n; j++){
 			for(k=0; k<g->m && g->arestas[j][k].term != -1; k++){
-				g->arestas[j][k].flow -= (g->arestas[j][k].flow * (double)1 / (i+1));
+				g->arestas[j][k].flow -= (int)(g->arestas[j][k].flow * (double)1 / (i+1));
 			}
 		}
 

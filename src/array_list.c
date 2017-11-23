@@ -63,7 +63,7 @@ void arraylist_insert_first(ArrayList *list, void *data){
 			for(i = list->first + 1; i < list->max_size && list->data[i] != NULL; i++);
 
 			if(i == list->max_size){
-				printf("ArrayLista cheia!!!!\n");
+				//printf("ArrayLista cheia!!!!\n");
 				list->max_size *= 2;
 				list->data = realloc(list->data, list->max_size * sizeof(void *));
 			}
@@ -84,7 +84,7 @@ void arraylist_insert_first(ArrayList *list, void *data){
 void arraylist_insert_last(ArrayList *list, void *data){
 	if(!arraylist_is_empty(list)){
 		if(list->last + 1 == list->max_size){
-			printf("ArrayList cheia!!!!\n");
+			//printf("ArrayList cheia!!!!\n");
 			list->max_size *= 2;
 			list->data = realloc(list->data, list->max_size * sizeof(void *));
 		}
