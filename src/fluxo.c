@@ -135,7 +135,7 @@ void calcular_fo(Grafo *g, double *tmedio, int *arestas_estouradas){
 			}
 		}
 	}
-	//TO-DO: (*tmedio) /= g->total_flow;
+	(*tmedio) /= g->total_flow;
 }
 
 void all_or_nothing(Grafo *g, int **matriz_od){

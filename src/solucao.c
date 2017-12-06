@@ -10,6 +10,20 @@ Caminho *novo_Caminho_vazio(int n){
 	return caminho;
 }
 
+void print_caminho(int *caminho, int destino, int n){
+	int c[n];
+	int i = 0;
+	int v = destino;
+	do{
+		c[i++] = v;
+		v = caminho[v];
+	}while(v != -1);
+	
+	for(i = i - 1; i >= 0; i--){
+		printf("%2d - ", c[i]);
+	}
+}
+
 Solucao *nova_Solucao_vazia(int n, int **matriz_od){
 	int n2 = n*n;
 	Solucao *solucao = malloc(n2 * sizeof(Solucao));

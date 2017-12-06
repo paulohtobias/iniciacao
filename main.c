@@ -25,13 +25,13 @@ int main(int argc, char** argv) {
 	return 0;*/
 
 	//Menu
-	int op;
-	printf("1 - All or Nothing\n"
+	int op = atoi(argv[3]);
+	/*printf("1 - All or Nothing\n"
 		   "2 - Incremental\n"
 		   "3 - Medias Sucessivas\n"
 		   "4 - Solucao\n");
 	
-	scanf("%d", &op);
+	scanf("%d", &op);*/
 	
 	switch(op){
 		case 1:
@@ -58,7 +58,7 @@ int main(int argc, char** argv) {
 	
 	calcular_fo(g, &tmedio, &estouro);
 	
-	printf("Tempo medio: %f\n", tmedio / g->total_flow);
+	printf("Tempo medio: %f\n", tmedio);
 	printf("Estouro: %d/%d\n", estouro, g->m);
 
 	return 0;

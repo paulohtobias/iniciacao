@@ -19,6 +19,8 @@ typedef struct Solucao{
 
 Caminho *novo_Caminho_vazio(int n);
 
+void print_caminho(int *caminho, int destino, int n);
+
 Solucao *nova_Solucao_vazia(int n, int **matriz_od);
 
 void solucao_constroi_inicial(Solucao *solucao, Grafo *g);

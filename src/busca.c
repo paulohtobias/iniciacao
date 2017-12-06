@@ -5,11 +5,22 @@ ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int in
 
 	ArrayList *vizinhos = new_ArrayList();
 	
+	printf("busca_local_vizinho (%d, %d): Fluxo antes (retirando %d)\n", solucao[indice_od].origem, solucao[indice_od].destino, caminho->fluxo);
+	grafo_printa(g);
+	print_caminho(caminho->pai, solucao[indice_od].destino, g->n);
+	getchar();
+	
 	//Retirando o fluxo do grafo.
 	fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, caminho->pai, -caminho->fluxo);
 	
+	/*printf("busca_local_vizinho: Fluxo retirado:\n");
+	grafo_printa(g);
+	print_caminho(caminho->pai, solucao[indice_od].destino, g->n);
+	getchar();*/
+	
 	int fluxo_restante = caminho->fluxo;
 
+	int i = 0;
 	while(fluxo_restante > 0.0){
 		Caminho *novo_caminho = novo_Caminho_vazio(g->n);
 
@@ -19,6 +30,11 @@ ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int in
 			g, solucao[indice_od].origem, solucao[indice_od].destino,
 			novo_caminho->pai, &fluxo_restante
 		);
+		
+		/*printf("%d: busca_local_vizinho: inseriu %d)\n", i++, novo_caminho->fluxo);
+		grafo_printa(g);
+		print_caminho(novo_caminho->pai, solucao[indice_od].destino, g->n);
+		getchar();*/
 
 		arraylist_insert_last(vizinhos, novo_caminho);
 	}
@@ -44,7 +60,6 @@ void busca_local(Grafo *g, Solucao *solucao){
 			ssss = &solucao[indice_od];
 		}while(solucao[indice_od].caminhos == NULL);
 		
-		//Sorteando um caminho do par aleatoriamente.
 		int indice_caminho = rand() % solucao[indice_od].caminhos->length;
 		
 		//Obtendo os novos caminhos.
@@ -52,11 +67,11 @@ void busca_local(Grafo *g, Solucao *solucao){
 		
 		calcular_fo(g, &fo_novo, NULL);
 		
-		printf("Antigo: %17f\n", fo);
-		printf(" Novo : %17f\n\n", fo_novo);
-		
 		if(fo_novo < fo){
-			printf("Melhorou\n\n");
+			printf("Melhorou\n");
+			printf("Antigo: %17f\n", fo);
+			printf(" Novo : %17f\n\n", fo_novo);
+			
 			melhora = 0;
 			
 			fo = fo_novo;
@@ -81,5 +96,5 @@ void busca_local(Grafo *g, Solucao *solucao){
 			fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, temp->pai, temp->fluxo);
 		}
 		
-	}while(melhora < 10);
+	}while(melhora < 100);
 }
