@@ -88,7 +88,7 @@ int fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, int *deman
 	w = destino;
 	if(caminho[w] == -1){
 		printf("Nao existe caminho de %d ate %d\n", origem, destino);
-		getchar();
+		//getchar();
 	}else{
 		do{
 			v = caminho[w];
@@ -96,9 +96,14 @@ int fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, int *deman
 			//Encontrando a aresta {v, w}
 			for(i=0; g->arestas[v][i].term != w; i++);
 
-			double capacidade_restante = g->arestas[v][i].capacity;// - g->arestas[v][i].flow;
-			if(capacidade_restante < fluxo_maximo){
-				fluxo_maximo = capacidade_restante;
+			int capacidade_residual = (int)g->arestas[v][i].capacity - g->arestas[v][i].flow;
+			if(capacidade_residual <= 0){
+				printf("OD: (%2d, %2d) | Aresta cheia: {%2d, %2d}\n", origem, destino, g->arestas[v][i].init, g->arestas[v][i].term);
+				return 0;
+			}
+
+			if(capacidade_residual < fluxo_maximo){
+				fluxo_maximo = capacidade_residual;
 			}
 
 			w = v;
@@ -107,7 +112,7 @@ int fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, int *deman
 		//Alocando o fluxo.
 		fluxo(g, origem, destino, caminho, *demanda);
 	}
-	
+
 	//Atualiza a demanda.
 	(*demanda) -= fluxo_maximo;
 	

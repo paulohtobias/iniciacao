@@ -119,7 +119,12 @@ void grafo_printa(Grafo *g) {
 		printf("%2d: ", i );
 		for (j = 0; j < g->m && g->arestas[i][j].term != -1; j++) {
 			double tempo = calcular_tempo(g->arestas[i][j]);
-			printf("[%2d: %6d] ", g->arestas[i][j].term, g->arestas[i][j].flow);
+			if((int) g->arestas[i][j].capacity - g->arestas[i][j].flow < 0){
+				printf("\033[0;31m");
+			}
+			printf("[%2d: %5d/%5d] ", g->arestas[i][j].term, g->arestas[i][j].flow, (int) g->arestas[i][j].capacity);
+			
+			printf("\033[0m");
 		}
 		printf("\n");
 	}
@@ -151,9 +156,9 @@ void menor_caminho(Grafo *g, int inicio, int *pai) {
 		//Atualizando
 		for (i = 0; i < g->m && g->arestas[v][i].term != -1; i++) {
 			w = g->arestas[v][i].term;
-			if (!escolhido[w]) {
+			if(!escolhido[w]){
 				double travel_time = calcular_tempo(g->arestas[v][i]);
-				if (peso[w] > (peso[v] + travel_time)) {
+				if(peso[w] > (peso[v] + travel_time)){
 					peso[w] = peso[v] + travel_time;
 					bh_decrease_key(heap, w, peso[w]);
 					pai[w] = v;

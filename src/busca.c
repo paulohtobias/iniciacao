@@ -5,10 +5,10 @@ ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int in
 
 	ArrayList *vizinhos = new_ArrayList();
 	
-	printf("busca_local_vizinho (%d, %d): Fluxo antes (retirando %d)\n", solucao[indice_od].origem, solucao[indice_od].destino, caminho->fluxo);
+	/*printf("busca_local_vizinho (%d, %d): Fluxo antes (retirando %d)\n", solucao[indice_od].origem, solucao[indice_od].destino, caminho->fluxo);
 	grafo_printa(g);
 	print_caminho(caminho->pai, solucao[indice_od].destino, g->n);
-	getchar();
+	getchar();*/
 	
 	//Retirando o fluxo do grafo.
 	fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, caminho->pai, -caminho->fluxo);
@@ -30,6 +30,13 @@ ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int in
 			g, solucao[indice_od].origem, solucao[indice_od].destino,
 			novo_caminho->pai, &fluxo_restante
 		);
+		
+		/* Se tiver estourado a capacidade. */
+		if(novo_caminho->fluxo == 0){
+			novo_caminho->fluxo = fluxo_restante;
+			fluxo_restante = 0;
+			fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, novo_caminho->pai, novo_caminho->fluxo);
+		}
 		
 		/*printf("%d: busca_local_vizinho: inseriu %d)\n", i++, novo_caminho->fluxo);
 		grafo_printa(g);

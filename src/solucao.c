@@ -10,6 +10,11 @@ Caminho *novo_Caminho_vazio(int n){
 	return caminho;
 }
 
+void free_Caminho(Caminho *caminho){
+	free(caminho->pai);
+	free(caminho);
+}
+
 void print_caminho(int *caminho, int destino, int n){
 	int c[n];
 	int i = 0;
@@ -50,21 +55,31 @@ Solucao *nova_Solucao_vazia(int n, int **matriz_od){
 void solucao_constroi_inicial(Solucao *solucao, Grafo *g){
 	int i;
 	int n = g->n;
-	getchar();
 
 	qsort(solucao, n * n, sizeof(Solucao), comparar_solucao);
 
 	for(i = 0; i < n * n; i++){
 		int fluxo_restante = solucao[i].fluxo_total;
-		while(fluxo_restante > 0.0){
+		while(fluxo_restante > 0){
+			//printf("%d: OD (%d-%d) | ", i, solucao[i].origem, solucao[i].destino);
 			Caminho *caminho = novo_Caminho_vazio(n);
 			menor_caminho(g, solucao[i].origem, caminho->pai);
 			caminho->fluxo = fluxo_capacidade(
 				g, solucao[i].origem, solucao[i].destino, caminho->pai,
 				&fluxo_restante
-				);
-			/**printf("%d: OD (%d-%d)\n", i, solucao[i].origem, solucao[i].destino);
-			grafo_printa(g);/**/
+			);
+			
+			/* Se tiver estourado a capacidade. */
+			if(caminho->fluxo == 0){
+				caminho->fluxo = fluxo_restante;
+				fluxo_restante = 0;
+				fluxo(g, solucao[i].origem, solucao[i].destino, caminho->pai, caminho->fluxo);
+			}
+			
+			/*printf("Fluxo (C,R,T): (%d,%d,%d)\n", caminho->fluxo, fluxo_restante, solucao[i].fluxo_total);
+			print_caminho(caminho->pai, solucao[i].destino, n);
+			printf("\n");
+			grafo_printa(g);*/
 			//getchar();
 			arraylist_insert_last(solucao[i].caminhos, caminho);
 		}
