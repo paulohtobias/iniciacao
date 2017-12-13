@@ -98,7 +98,7 @@ int fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, int *deman
 
 			int capacidade_residual = (int)g->arestas[v][i].capacity - g->arestas[v][i].flow;
 			if(capacidade_residual <= 0){
-				printf("OD: (%2d, %2d) | Aresta cheia: {%2d, %2d}\n", origem, destino, g->arestas[v][i].init, g->arestas[v][i].term);
+				//printf("OD: (%2d, %2d) | Aresta cheia: {%2d, %2d}\n", origem, destino, g->arestas[v][i].init, g->arestas[v][i].term);
 				return 0;
 			}
 

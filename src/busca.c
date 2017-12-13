@@ -5,45 +5,47 @@ ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int in
 
 	ArrayList *vizinhos = new_ArrayList();
 	
-	/*printf("busca_local_vizinho (%d, %d): Fluxo antes (retirando %d)\n", solucao[indice_od].origem, solucao[indice_od].destino, caminho->fluxo);
+	/**printf("busca_local_vizinho (%d, %d): Fluxo antes (retirando %d)\n", solucao[indice_od].origem, solucao[indice_od].destino, caminho->fluxo);
 	grafo_printa(g);
 	print_caminho(caminho->pai, solucao[indice_od].destino, g->n);
-	getchar();*/
+	//getchar();/**/
 	
 	//Retirando o fluxo do grafo.
 	fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, caminho->pai, -caminho->fluxo);
 	
-	/*printf("busca_local_vizinho: Fluxo retirado:\n");
+	/**printf("busca_local_vizinho: Fluxo retirado:\n");
 	grafo_printa(g);
 	print_caminho(caminho->pai, solucao[indice_od].destino, g->n);
-	getchar();*/
+	//getchar();/**/
 	
 	int fluxo_restante = caminho->fluxo;
 
 	int i = 0;
-	while(fluxo_restante > 0.0){
+	while(fluxo_restante > 0){
 		Caminho *novo_caminho = novo_Caminho_vazio(g->n);
 
 		menor_caminho(g, solucao[indice_od].origem, novo_caminho->pai);
 
+		int _fluxo = 1;
 		novo_caminho->fluxo = fluxo_capacidade(
 			g, solucao[indice_od].origem, solucao[indice_od].destino,
-			novo_caminho->pai, &fluxo_restante
+			novo_caminho->pai, &_fluxo
 		);
 		
 		/* Se tiver estourado a capacidade. */
 		if(novo_caminho->fluxo == 0){
-			novo_caminho->fluxo = fluxo_restante;
-			fluxo_restante = 0;
+			novo_caminho->fluxo = _fluxo;
 			fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, novo_caminho->pai, novo_caminho->fluxo);
 		}
 		
-		/*printf("%d: busca_local_vizinho: inseriu %d)\n", i++, novo_caminho->fluxo);
+		/**printf("%d: busca_local_vizinho: inseriu %d)\n", i++, novo_caminho->fluxo);
 		grafo_printa(g);
 		print_caminho(novo_caminho->pai, solucao[indice_od].destino, g->n);
-		getchar();*/
+		//getchar();/**/
 
 		arraylist_insert_last(vizinhos, novo_caminho);
+		
+		fluxo_restante -= _fluxo;
 	}
 	
 	return vizinhos;
@@ -56,6 +58,8 @@ void busca_local(Grafo *g, Solucao *solucao){
 	ArrayList *vizinhos;
 	
 	calcular_fo(g, &fo, NULL);
+	
+	double fo_inicial = fo;
 	
 	do{
 		
@@ -104,4 +108,9 @@ void busca_local(Grafo *g, Solucao *solucao){
 		}
 		
 	}while(melhora < 100);
+	
+	printf("=========================\n");
+	printf("Inicial: %17f\n", fo_inicial);
+	printf("  Busca: %17f\n", fo);
+	printf("Melhora: %17f\n", fo_inicial - fo);
 }

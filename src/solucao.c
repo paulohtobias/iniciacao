@@ -62,14 +62,18 @@ void solucao_constroi_inicial(Solucao *solucao, Grafo *g){
 		int fluxo_restante = solucao[i].fluxo_total;
 		while(fluxo_restante > 0){
 			//printf("%d: OD (%d-%d) | ", i, solucao[i].origem, solucao[i].destino);
+
+			//Calcula o menor caminho.
 			Caminho *caminho = novo_Caminho_vazio(n);
 			menor_caminho(g, solucao[i].origem, caminho->pai);
+			
+			//Tenta passar o fluxo pelo caminho
 			caminho->fluxo = fluxo_capacidade(
 				g, solucao[i].origem, solucao[i].destino, caminho->pai,
 				&fluxo_restante
 			);
 			
-			/* Se tiver estourado a capacidade. */
+			//Se tiver estourado a capacidade.
 			if(caminho->fluxo == 0){
 				caminho->fluxo = fluxo_restante;
 				fluxo_restante = 0;
