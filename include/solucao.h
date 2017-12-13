@@ -6,14 +6,14 @@
 #include <time.h>
 
 typedef struct Caminho{
-	int fluxo;
+	double fluxo;
 	int *pai;
 }Caminho;
 
 typedef struct Solucao{
 	int origem;
 	int destino;
-	int fluxo_total;
+	double fluxo_total;
 	ArrayList *caminhos;
 }Solucao;
 
@@ -23,7 +23,7 @@ void free_Caminho(Caminho *caminho);
 
 void print_caminho(int *caminho, int destino, int n);
 
-Solucao *nova_Solucao_vazia(int n, int **matriz_od);
+Solucao *nova_Solucao_vazia(int n, double **matriz_od);
 
 void solucao_constroi_inicial(Solucao *solucao, Grafo *g);
 

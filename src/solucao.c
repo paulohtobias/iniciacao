@@ -29,8 +29,8 @@ void print_caminho(int *caminho, int destino, int n){
 	}
 }
 
-Solucao *nova_Solucao_vazia(int n, int **matriz_od){
-	int n2 = n*n;
+Solucao *nova_Solucao_vazia(int n, double **matriz_od){
+	int n2 = n * n;
 	Solucao *solucao = malloc(n2 * sizeof(Solucao));
 
 	int i, j, k = 0;
@@ -59,7 +59,7 @@ void solucao_constroi_inicial(Solucao *solucao, Grafo *g){
 	qsort(solucao, n * n, sizeof(Solucao), comparar_solucao);
 
 	for(i = 0; i < n * n; i++){
-		int fluxo_restante = solucao[i].fluxo_total;
+		double fluxo_restante = solucao[i].fluxo_total;
 		while(fluxo_restante > 0){
 			//printf("%d: OD (%d-%d) | ", i, solucao[i].origem, solucao[i].destino);
 
@@ -102,7 +102,7 @@ int comparar_solucao(const void *s1, const void *s2){
 	}
 }
 
-void solucao_teste(Grafo *g, int **matriz_od){
+void solucao_teste(Grafo *g, double **matriz_od){
 	int melhor_caminho[g->n][g->n];
 	double melhor_custo[g->n][g->n];
 
@@ -172,6 +172,6 @@ void solucao_teste(Grafo *g, int **matriz_od){
 		}
 	}
 	aec /= g->total_flow;
-	printf("%d/%d (%.2f%%) carros ficaram fora do seu caminho ideal\n", fora, g->total_flow, (double)fora / g->total_flow * 100);
+	printf("%d/%.0f (%.2f%%) carros ficaram fora do seu caminho ideal\n", fora, g->total_flow, (double)fora / g->total_flow * 100);
 	printf("AEC: %f\n\n", aec);
 }

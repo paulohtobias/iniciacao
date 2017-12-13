@@ -119,10 +119,10 @@ void grafo_printa(Grafo *g) {
 		printf("%2d: ", i );
 		for (j = 0; j < g->m && g->arestas[i][j].term != -1; j++) {
 			double tempo = calcular_tempo(g->arestas[i][j]);
-			if((int) g->arestas[i][j].capacity - g->arestas[i][j].flow < 0){
+			if(g->arestas[i][j].capacity - g->arestas[i][j].flow < 0){
 				printf("\033[0;31m");
 			}
-			printf("[%2d: %5d/%5d] ", g->arestas[i][j].term, g->arestas[i][j].flow, (int) g->arestas[i][j].capacity);
+			printf("[%2d: %5f/%5f] ", g->arestas[i][j].term, g->arestas[i][j].flow, g->arestas[i][j].capacity);
 			
 			printf("\033[0m");
 		}

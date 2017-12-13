@@ -1,6 +1,6 @@
 #include "busca.h"
 
-ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int indice_caminho){
+ArrayList *busca_local_vizinho_od(Grafo *g, Solucao *solucao, int indice_od, int indice_caminho){
 	Caminho *caminho = arraylist_get_index(solucao[indice_od].caminhos, indice_caminho);
 
 	ArrayList *vizinhos = new_ArrayList();
@@ -18,7 +18,7 @@ ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int in
 	print_caminho(caminho->pai, solucao[indice_od].destino, g->n);
 	//getchar();/**/
 	
-	int fluxo_restante = caminho->fluxo;
+	double fluxo_restante = caminho->fluxo;
 
 	int i = 0;
 	while(fluxo_restante > 0){
@@ -26,7 +26,7 @@ ArrayList *busca_local_vizinho(Grafo *g, Solucao *solucao, int indice_od, int in
 
 		menor_caminho(g, solucao[indice_od].origem, novo_caminho->pai);
 
-		int _fluxo = 1;
+		double _fluxo = 1;
 		novo_caminho->fluxo = fluxo_capacidade(
 			g, solucao[indice_od].origem, solucao[indice_od].destino,
 			novo_caminho->pai, &_fluxo
@@ -74,7 +74,7 @@ void busca_local(Grafo *g, Solucao *solucao){
 		int indice_caminho = rand() % solucao[indice_od].caminhos->length;
 		
 		//Obtendo os novos caminhos.
-		vizinhos = busca_local_vizinho(g, solucao, indice_od, indice_caminho);
+		vizinhos = busca_local_vizinho_od(g, solucao, indice_od, indice_caminho);
 		
 		calcular_fo(g, &fo_novo, NULL);
 		

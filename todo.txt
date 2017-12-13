@@ -1,5 +1,3 @@
-* construir solução
-	. considerar fluxo residual
-
-* busca local:
-	. redistribuir 1 carro por vez no fluxo.
+* usar double nos fluxos.
+* busca local com arestas.
+	* adicionar um parametro bloqueado na aresta e conferir no calculo do menor caminho.

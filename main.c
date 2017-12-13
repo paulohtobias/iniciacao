@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
 	grafo_printa(g); //return 0;
 
 	//Inicializçao da matriz OD.
-	int **matriz_od = origem_destino(argv[2], g->n, &g->total_flow);
+	double **matriz_od = origem_destino(argv[2], g->n, &g->total_flow);
 	
 	/*for(i=0; i<g->n; i++){
 		for(j=0; j<g->n; j++){
