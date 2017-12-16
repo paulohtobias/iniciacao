@@ -19,6 +19,7 @@ typedef struct Aresta {
     int toll;
     int type;
     double travel_time; ///Não usado ainda.
+	int blocked;
 } Aresta;
 
 typedef struct Grafo {

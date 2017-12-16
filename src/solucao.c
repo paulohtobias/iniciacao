@@ -172,6 +172,6 @@ void solucao_teste(Grafo *g, double **matriz_od){
 		}
 	}
 	aec /= g->total_flow;
-	printf("%d/%.0f (%.2f%%) carros ficaram fora do seu caminho ideal\n", fora, g->total_flow, (double)fora / g->total_flow * 100);
-	printf("AEC: %f\n\n", aec);
+	/*printf("%d/%.0f (%.2f%%) carros ficaram fora do seu caminho ideal\n", fora, g->total_flow, (double)fora / g->total_flow * 100);
+	printf("AEC: %f\n\n", aec);*/
 }

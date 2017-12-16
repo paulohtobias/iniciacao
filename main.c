@@ -11,7 +11,7 @@ int main(int argc, char** argv) {
 	//Grafo inicial tem o free flow time como peso das arestas.
 	Grafo *g = novo_Grafo_arquivo(argv[1]);
 	
-	grafo_printa(g); //return 0;
+	//grafo_printa(g); //return 0;
 
 	//Inicializçao da matriz OD.
 	double **matriz_od = origem_destino(argv[2], g->n, &g->total_flow);
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 			printf("Opção inválida\n");
 	}
 	
-	grafo_printa(g);
+	//grafo_printa(g);
 	
 	//Calculando tempo medio.
 	double tmedio = 0;
@@ -58,6 +58,7 @@ int main(int argc, char** argv) {
 	
 	calcular_fo(g, &tmedio, &estouro);
 	
+	printf("%f\n", tmedio); return 0;
 	printf("Tempo medio: %f\n", tmedio);
 	printf("Estouro: %d/%d\n", estouro, g->m);
 

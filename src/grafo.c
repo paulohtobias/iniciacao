@@ -5,11 +5,12 @@ Aresta nova_Aresta(int saida, int chegada, double peso) {
 	aresta.init = saida;
 	aresta.term = chegada;
 	aresta.travel_time = peso;
+	aresta.blocked = 0;
 	return aresta;
 }
 
 double calcular_tempo(Aresta aresta){
-	//return aresta.fft + 0.02 * aresta.flow;
+	return aresta.fft + 0.02 * aresta.flow;
 	
 	double stall = 1 + aresta.b * pow(aresta.flow / aresta.capacity, aresta.power);
 	return aresta.fft * stall;
@@ -122,7 +123,7 @@ void grafo_printa(Grafo *g) {
 			if(g->arestas[i][j].capacity - g->arestas[i][j].flow < 0){
 				printf("\033[0;31m");
 			}
-			printf("[%2d: %5f/%5f] ", g->arestas[i][j].term, g->arestas[i][j].flow, g->arestas[i][j].capacity);
+			printf("[%2d: %05.1f/%06.2f] ", g->arestas[i][j].term, g->arestas[i][j].flow, g->arestas[i][j].capacity);
 			
 			printf("\033[0m");
 		}
@@ -156,7 +157,7 @@ void menor_caminho(Grafo *g, int inicio, int *pai) {
 		//Atualizando
 		for (i = 0; i < g->m && g->arestas[v][i].term != -1; i++) {
 			w = g->arestas[v][i].term;
-			if(!escolhido[w]){
+			if(!escolhido[w] && !g->arestas[v][i].blocked){
 				double travel_time = calcular_tempo(g->arestas[v][i]);
 				if(peso[w] > (peso[v] + travel_time)){
 					peso[w] = peso[v] + travel_time;
