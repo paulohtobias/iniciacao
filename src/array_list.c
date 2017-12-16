@@ -13,7 +13,7 @@ ArrayList *new_ArrayList_max_size(int max){
 
 	list->length = 0;
 	list->first = 0;
-	list->last = 0;
+	list->last = -1;
 	list->data = malloc(max * sizeof(void *));
 	if(list->data == NULL){
 		printf("list->data = malloc(max * sizeof(void *));\n");
@@ -88,9 +88,9 @@ void arraylist_insert_last(ArrayList *list, void *data){
 			list->max_size *= 2;
 			list->data = realloc(list->data, list->max_size * sizeof(void *));
 		}
-		list->last++;
 	}
-
+	
+	list->last++;
 	list->data[list->last] = data;
 	list->length++;
 }
@@ -105,7 +105,7 @@ void *arraylist_get_last(ArrayList *list){
 
 void *arraylist_get_index(ArrayList *list, int index){
 	index += list->first;
-	if(arraylist_is_empty(list) || index > list->length){
+	if(arraylist_is_empty(list) || index > list->last){
 		return NULL;
 	}
 
@@ -138,16 +138,19 @@ void *arraylist_remove_last(ArrayList *list){
 
 void *arraylist_remove_index(ArrayList *list, int index){
 	index += list->first;
-	if(arraylist_is_empty(list) || index > list->length){
+	if(arraylist_is_empty(list) || index > list->last){
 		return NULL;
 	}
 	
 	int i;
 	void *temp = list->data[index];
 	
-	for(i=index; i<list->length - 1; i++){
+	for(i = index; i < list->last; i++){
 		list->data[i] = list->data[i+1];
 	}
+	
+	list->last--;
+	list->length--;
 	
 	return temp;
 }

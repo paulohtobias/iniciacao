@@ -117,7 +117,7 @@ void busca_local(Grafo *g, Solucao *solucao){
 			melhora = 0;
 			
 			fo = fo_novo;
-			arraylist_remove_index(solucao[indice_od].caminhos, indice_caminho);
+			free_Caminho(arraylist_remove_index(solucao[indice_od].caminhos, indice_caminho));
 			
 			//Insere os caminhos gerados na lista de caminhos do par sorteado.
 			while(!arraylist_is_empty(vizinhos)){
