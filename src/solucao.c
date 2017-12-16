@@ -70,15 +70,16 @@ void solucao_constroi_inicial(Solucao *solucao, Grafo *g){
 			//Tenta passar o fluxo pelo caminho
 			caminho->fluxo = fluxo_capacidade(
 				g, solucao[i].origem, solucao[i].destino, caminho->pai,
-				&fluxo_restante
+				fluxo_restante
 			);
 			
 			//Se tiver estourado a capacidade.
 			if(caminho->fluxo == 0){
 				caminho->fluxo = fluxo_restante;
-				fluxo_restante = 0;
 				fluxo(g, solucao[i].origem, solucao[i].destino, caminho->pai, caminho->fluxo);
 			}
+			
+			fluxo_restante -= caminho->fluxo;
 			
 			/*printf("Fluxo (C,R,T): (%d,%d,%d)\n", caminho->fluxo, fluxo_restante, solucao[i].fluxo_total);
 			print_caminho(caminho->pai, solucao[i].destino, n);

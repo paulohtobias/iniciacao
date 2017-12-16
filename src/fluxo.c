@@ -73,7 +73,7 @@ void fluxo_origem(Grafo *g, int inicio, int *caminho, double *origemI, double po
 	}
 }
 
-double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double *demanda){
+double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double demanda){
 	int i, v, w;
 	
 	double fluxo_maximo;
@@ -84,7 +84,7 @@ double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double 
 	}
 	
 	//Encontrando o gargalo.
-	fluxo_maximo = *demanda;
+	fluxo_maximo = demanda;
 	w = destino;
 	do{
 		v = caminho[w];
@@ -106,10 +106,7 @@ double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double 
 	}while(v != origem);
 
 	//Alocando o fluxo.
-	fluxo(g, origem, destino, caminho, *demanda);
-
-	//Atualiza a demanda.
-	(*demanda) -= fluxo_maximo;
+	fluxo(g, origem, destino, caminho, fluxo_maximo);
 	
 	return fluxo_maximo;
 }

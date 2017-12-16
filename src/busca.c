@@ -41,10 +41,8 @@ ArrayList *busca_local_vizinho_od(Grafo *g, Solucao *solucao, int indice_od, int
 		double _fluxo = 1;
 		novo_caminho->fluxo = fluxo_capacidade(
 			g, solucao[indice_od].origem, solucao[indice_od].destino,
-			novo_caminho->pai, &_fluxo
+			novo_caminho->pai, _fluxo
 		);
-		
-		_fluxo = 1;
 		
 		/* Se tiver estourado a capacidade. */
 		if(novo_caminho->fluxo == 0){
@@ -72,7 +70,7 @@ ArrayList *busca_local_vizinho_od(Grafo *g, Solucao *solucao, int indice_od, int
 
 		arraylist_insert_last(vizinhos, novo_caminho);
 		
-		fluxo_restante -= _fluxo;
+		fluxo_restante -= novo_caminho->fluxo;
 	}
 	
 	aresta_bloqueada->blocked = 0;

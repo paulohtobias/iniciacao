@@ -9,7 +9,7 @@ void fluxo(Grafo *g, int origem, int destino, int *pai, double demanda);
 
 void fluxo_origem(Grafo *g, int inicio, int *caminho, double *origemI, double porcentagem);
 
-double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double *demanda);
+double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double demanda);
 
 void calcular_fo(Grafo *g, double *tmedio, int *arestas_estouradas);
 
