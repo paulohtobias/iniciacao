@@ -12,14 +12,32 @@ ArrayList *busca_local_vizinho_od(Grafo *g, Solucao *solucao, int indice_od, int
 	print_caminho(caminho->pai, solucao[indice_od].destino, g->n);
 	getchar();/**/
 	
+	int i = 0;
 	//Retirando o fluxo do grafo.
 	fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, caminho->pai, -caminho->fluxo);
 	
-	//Bloqueando a primeira aresta do caminho.
+	//Bloqueando uma aresta aleatória do caminho.
 	Aresta *aresta_bloqueada = NULL;
+	
+	int arestas = 0;
 	int w = solucao[indice_od].destino;
-	int v = caminho->pai[w];
-	int i;
+	int v;
+	//Conta a quantidade de arestas do caminho.
+	do{
+		v = caminho->pai[w];
+		arestas++;
+		w = v;
+	}while(v != solucao[indice_od].origem);
+	
+	int aresta_aleatoria = rand() % arestas;
+	
+	//Encontrando os vértices da aresta.
+	w = solucao[indice_od].destino;
+	for(i = 0; i < aresta_aleatoria; i++){
+		w = caminho->pai[w];
+	}
+	v = caminho->pai[w];
+	
 	for(i = 0; g->arestas[v][i].term != w; i++);
 	aresta_bloqueada = &g->arestas[v][i];
 	aresta_bloqueada->blocked = 1;
@@ -128,8 +146,7 @@ void busca_local(Grafo *g, Solucao *solucao){
 			while(!arraylist_is_empty(vizinhos)){
 				Caminho *temp = arraylist_remove_last(vizinhos);
 				fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, temp->pai, -temp->fluxo);
-				free(temp->pai);
-				free(temp);
+				free_Caminho(temp);
 			}
 			
 			Caminho *temp = arraylist_get_index(solucao[indice_od].caminhos, indice_caminho);
