@@ -7,7 +7,7 @@ from math import sqrt
 inst = './instancias' + '/'
 
 # Saida
-pasta = 'testes' + '/'
+pasta = 'resultados' + '/'
 
 if not os.path.exists(pasta):
     os.makedirs(pasta)
