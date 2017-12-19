@@ -314,13 +314,42 @@ double busca_local_randomica(Grafo *g, Solucao *solucao, double fo_inicial, int 
 	}
 	
 	calcular_fo(g, &fo, NULL);
-	/**/
+	/**
 	printf("========== BLR ===========\n");
 	printf("Inicial: %17f\n", fo_inicial);
 	printf("  Busca: %17f\n", fo);
 	printf("Melhora: %17f\n", fo_inicial - fo);
 	return fo;
 	/**/
+}
+
+void pertubacao(Grafo *g, Solucao *solucao){
+	int i, j;
+	int n2 = g->n * g->n;
+	
+	//Escolhendo uma solução que possui caminhos com fluxo maior que 1.
+	for(i = 0; i < n2; i++){
+		if(solucao[i].caminhos != NULL && solucao[i].caminhos->length < solucao[i].fluxo_total){
+			for(j = 0; j < solucao[i].caminhos->length; j++){
+				Caminho *cj = arraylist_get_index(solucao[i].caminhos, j);
+				
+				if(cj->fluxo > 1){
+					ArrayList *vizinhos = busca_local_randomica_vizinhanca_N2(g, solucao, i, j);
+					
+					free_Caminho(arraylist_remove_index(solucao[i].caminhos, j));
+			
+					//Insere os caminhos gerados na lista de caminhos do par escolhido.
+					while(!arraylist_is_empty(vizinhos)){
+						arraylist_insert_last(solucao[i].caminhos, arraylist_remove_last(vizinhos));
+					}
+					
+					return;
+				}
+				
+			}
+		}
+	}
+	
 }
 
 void ILS(Grafo *g, double **matriz_od, int iter_max){
@@ -343,14 +372,17 @@ void ILS(Grafo *g, double **matriz_od, int iter_max){
 
 	while(iter < iter_max){
 		iter++;
+		
+		//Pertubação
+		pertubacao(g, s_linha);
 
 		//Busca Local
 		debug = 0;
-		fo_novo = busca_local_randomica(g, s_linha, fo, 100, busca_local_randomica_vizinhanca_N2);
+		fo_novo = busca_local_randomica(g, s_linha, -1, 100, busca_local_randomica_vizinhanca_N2);
 		
 		//Verificação de melhora.
 		if(fo_novo < fo){
-			/**/
+			/**
 			printf("========== ILS ===========\n");
 			printf("Inicial: %17f\n", fo);
 			printf("  Busca: %17f\n", fo_novo);
@@ -367,4 +399,3 @@ void ILS(Grafo *g, double **matriz_od, int iter_max){
 		}
 	}
 }
-
