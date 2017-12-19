@@ -113,7 +113,8 @@ double fluxo_capacidade(Grafo *g, int origem, int destino, int *caminho, double 
 
 void calcular_fo(Grafo *g, double *tmedio, int *arestas_estouradas){
 	double tempo;
-	
+
+	*tmedio = 0;
 	int i, j;
 	for(i=0; i<g->n; i++){
 		for(j=0; g->arestas[i][j].term != -1; j++){

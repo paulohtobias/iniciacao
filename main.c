@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 			medias_sucessivas(g, matriz_od);
 			break;
 		case 4:
-			solucao_teste(g, matriz_od);
+			ILS(g, matriz_od, 100);
 			break;
 		default:
 			printf("Opção inválida\n");

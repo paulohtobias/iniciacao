@@ -3,6 +3,7 @@
 
 #include "array_list.h"
 #include "fluxo.h"
+#include <string.h>
 #include <time.h>
 
 typedef struct Caminho{
@@ -28,5 +29,7 @@ Solucao *nova_Solucao_vazia(int n, double **matriz_od);
 void solucao_constroi_inicial(Solucao *solucao, Grafo *g);
 
 int comparar_solucao(const void *s1, const void *s2);
+
+Solucao *copia_solucao(Solucao *dst, Solucao *src, int n);
 
 #endif /* SOLUCAO_H */

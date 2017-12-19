@@ -1,6 +1,6 @@
 #include "busca.h"
 
-ArrayList *busca_local_randomica(Grafo *g, Solucao *solucao, int indice_od, int indice_caminho){
+ArrayList *busca_local_randomica_vizinhanca_N1(Grafo *g, Solucao *solucao, int indice_od, int indice_caminho){
 	Caminho *caminho = arraylist_get_index(solucao[indice_od].caminhos, indice_caminho);
 
 	ArrayList *vizinhos = new_ArrayList();
@@ -96,7 +96,7 @@ ArrayList *busca_local_randomica(Grafo *g, Solucao *solucao, int indice_od, int 
 	return vizinhos;
 }
 
-ArrayList *busca_local_randomica_N2(Grafo *g, Solucao *solucao, int indice_od, int indice_caminho){
+ArrayList *busca_local_randomica_vizinhanca_N2(Grafo *g, Solucao *solucao, int indice_od, int indice_caminho){
 	Caminho *caminho = arraylist_get_index(solucao[indice_od].caminhos, indice_caminho);
 
 	ArrayList *vizinhos = new_ArrayList();
@@ -246,17 +246,21 @@ ArrayList *busca_local_randomica_N2(Grafo *g, Solucao *solucao, int indice_od, i
 	return vizinhos;
 }
 
-void busca_local(Grafo *g, Solucao *solucao){
-	int melhora = 0;
+int debug = 0;
+double busca_local_randomica(Grafo *g, Solucao *solucao, double fo_inicial, int iter_max, ArrayList *(*vizinhanca)(Grafo *, Solucao *, int, int)){
+	int iter = 0;
 	int indice_od;
 	double fo, fo_novo;
 	ArrayList *vizinhos;
 	
-	calcular_fo(g, &fo, NULL);
+	if(fo_inicial == -1){
+		calcular_fo(g, &fo_inicial, NULL);
+	}
 	
-	double fo_inicial = fo;
+	fo = fo_inicial;
 	
-	do{
+	while(iter < iter_max){
+		iter++;
 		
 		//Sorteando um par OD aleatoriamente.
 		Solucao *ssss;
@@ -269,18 +273,25 @@ void busca_local(Grafo *g, Solucao *solucao){
 		int indice_caminho = rand() % solucao[indice_od].caminhos->length;
 		
 		//Obtendo os novos caminhos.
-		vizinhos = busca_local_randomica_N2(g, solucao, indice_od, indice_caminho);
+		vizinhos = vizinhanca(g, solucao, indice_od, indice_caminho);
 		
 		calcular_fo(g, &fo_novo, NULL);
 		
+		if(debug){
+			printf("BLR\n");
+			printf("Antigo: %17f\n", fo);
+			printf(" Novo : %17f\n\n", fo_novo);
+			getchar();
+		}
+		
 		if(fo_novo < fo){
+			iter = 0;
+			
 			/**
 			printf("Melhorou\n");
 			printf("Antigo: %17f\n", fo);
 			printf(" Novo : %17f\n\n", fo_novo);
 			/**/
-			
-			melhora = 0;
 			
 			fo = fo_novo;
 			free_Caminho(arraylist_remove_index(solucao[indice_od].caminhos, indice_caminho));
@@ -290,8 +301,6 @@ void busca_local(Grafo *g, Solucao *solucao){
 				arraylist_insert_last(solucao[indice_od].caminhos, arraylist_remove_last(vizinhos));
 			}
 		}else{
-			melhora++;
-			
 			//Desfaz as alterações.
 			while(!arraylist_is_empty(vizinhos)){
 				Caminho *temp = arraylist_remove_last(vizinhos);
@@ -301,12 +310,61 @@ void busca_local(Grafo *g, Solucao *solucao){
 			
 			Caminho *temp = arraylist_get_index(solucao[indice_od].caminhos, indice_caminho);
 			fluxo(g, solucao[indice_od].origem, solucao[indice_od].destino, temp->pai, temp->fluxo);
-		}
-		
-	}while(melhora < 100);
+		}	
+	}
 	
-	/*printf("=========================\n");
+	calcular_fo(g, &fo, NULL);
+	/**/
+	printf("========== BLR ===========\n");
 	printf("Inicial: %17f\n", fo_inicial);
 	printf("  Busca: %17f\n", fo);
-	printf("Melhora: %17f\n", fo_inicial - fo);*/
+	printf("Melhora: %17f\n", fo_inicial - fo);
+	return fo;
+	/**/
 }
+
+void ILS(Grafo *g, double **matriz_od, int iter_max){
+	srand((unsigned) time(NULL));
+
+	int i, j;
+	int iter = 0;
+	int n2 = g->n * g->n;
+	double fo = -22, fo_novo;
+	Solucao *solucao = nova_Solucao_vazia(g->n, matriz_od);
+	Solucao *s_linha = calloc(n2, sizeof(Solucao));
+
+	solucao_constroi_inicial(solucao, g);
+
+	//Busca local
+	fo = busca_local_randomica(g, solucao, -1, 100, busca_local_randomica_vizinhanca_N1);
+
+	//Copia
+	copia_solucao(s_linha, solucao, g->n);
+
+	while(iter < iter_max){
+		iter++;
+
+		//Busca Local
+		debug = 0;
+		fo_novo = busca_local_randomica(g, s_linha, fo, 100, busca_local_randomica_vizinhanca_N2);
+		
+		//Verificação de melhora.
+		if(fo_novo < fo){
+			/**/
+			printf("========== ILS ===========\n");
+			printf("Inicial: %17f\n", fo);
+			printf("  Busca: %17f\n", fo_novo);
+			printf("Melhora: %17f\n", fo - fo_novo);
+			//getchar();
+			/**/
+			
+			iter = 0;
+			
+			fo = fo_novo;
+			
+			//Copia
+			copia_solucao(solucao, s_linha, g->n);
+		}
+	}
+}
+
